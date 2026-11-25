@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoneyMap — Google Docs & Website Documentation</title>
+  <style>
+    :root {
+      --brand: #7C6FF7;
+      --brand-dark: #6D5FED;
+      --brand-light: #EDE9FE;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      --success: #10B981;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      padding: 32px 20px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* Top Action Bar */
+    .action-bar {
+      background: #1E1B4B;
+      color: #FFFFFF;
+      padding: 18px 24px;
+      border-radius: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px -5px rgba(30, 27, 75, 0.25);
+    }
+    .action-bar h2 { font-size: 17px; font-weight: 600; color: #EDE9FE; }
+    .action-bar p { font-size: 13px; color: #A5B4FC; margin-top: 2px; }
+    .btn-copy {
+      background: #7C6FF7;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-copy:hover { background: #6D5FED; transform: translateY(-1px); }
+    .btn-copy:active { transform: translateY(0); }
+
+    /* The Main Document Canvas */
+    .document-paper {
+      background: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 56px 48px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Document Typography */
+    h1 {
+      font-size: 32px;
+      font-weight: 800;
+      color: #0F172A;
+      letter-spacing: -0.8px;
+      margin-bottom: 12px;
+    }
+    .header-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #F1F5F9;
+    }
+    .repo-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      background: #F1F5F9;
+      color: #334155;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      transition: background 0.15s;
+    }
+    .repo-link:hover {
+      background: #E2E8F0;
+      color: var(--brand);
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1E293B;
+      margin-top: 36px;
+      margin-bottom: 14px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #E2E8F0;
+    }
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #334155;
+      margin-top: 20px;
+      margin-bottom: 8px;
+    }
+    p {
+      color: #334155;
+      font-size: 15px;
+      margin-bottom: 14px;
+      line-height: 1.65;
+    }
+    ul {
+      margin-left: 20px;
+      margin-bottom: 16px;
+      color: #334155;
+      font-size: 14.5px;
+    }
+    li { margin-bottom: 6px; }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid #E2E8F0;
+      padding: 10px 14px;
+      text-align: left;
+    }
+    th {
+      background-color: #F8FAFC;
+      color: #1E293B;
+      font-weight: 600;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge-primary { background: #EDE9FE; color: #6D5FED; }
+    .badge-success { background: #DCFCE7; color: #166534; }
+    .badge-info { background: #E0F2FE; color: #0369A1; }
+
+    /* Banner Container */
+    .banner-preview-box {
+      margin: 36px 0;
+      background: #0F0F12;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      border: 1px solid #27272A;
+    }
+    .banner-preview-box img, .banner-preview-box svg {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Floating copy toolbar -->
+  <div class="action-bar">
+    <div>
+      <h2>Google Docs &amp; Website Ready</h2>
+      <p>Click the button to copy styled content directly into your Google Doc or CMS editor.</p>
+    </div>
+    <button class="btn-copy" id="copyBtn" onclick="copyDocument()">
+      <span id="copyIcon">📋</span> <span id="copyText">Copy for Google Docs</span>
+    </button>
+  </div>
+
+  <!-- Document Paper (This is what copies into Google Docs) -->
+  <div class="document-paper" id="docContent">
+
+    <h1>MoneyMap — Personal Budgeting &amp; Spend Visualization</h1>
+
+    <!-- Heading Repository Links -->
+    <div class="header-links">
+      <a class="repo-link" href="https://github.com/SUSH9391/MoneyMap-mobile" target="_blank">
+        📱 <strong>Frontend Repo:</strong> github.com/SUSH9391/MoneyMap-mobile
+      </a>
+      <a class="repo-link" href="https://github.com/SUSH9391/MoneyMap-backend" target="_blank">
+        ⚙️ <strong>Backend Repo:</strong> github.com/SUSH9391/MoneyMap-backend
+      </a>
+    </div>
+
+    <!-- App Visual Banner for Website Embedding -->
+    <div style="margin: 24px 0; text-align: center;">
+      <p style="font-size: 13px; color: #64748B; margin-bottom: 8px;"><strong>Official Website &amp; Portfolio Banner:</strong></p>
+      <img src="MoneyMap_Banner.svg" alt="MoneyMap App Banner" style="width: 100%; max-width: 820px; border-radius: 10px; border: 1px solid #E2E8F0; box-shadow: 0 4px 12px rgba(0,0,0,0.08);" />
+    </div>
+
+    <h2>1. Project Overview</h2>
+    <p>
+      <strong>MoneyMap</strong> is an intelligent mobile personal finance application built to help users manage their money by creating flexible budgets on <strong>Weekly</strong>, <strong>Monthly</strong>, or <strong>Yearly</strong> bases. The app delivers intuitive, real-time visual representations of how much money has been spent and provides immediate visual awareness of how much budget remains.
+    </p>
+    <p>
+      Equipped with automated AI receipt scanning, dual-token security architecture, and category-level spending tracking, MoneyMap bridges the gap between everyday expenses and long-term financial discipline.
+    </p>
+
+    <h2>2. Key Features</h2>
+    <ul>
+      <li><strong>Flexible Multi-Cycle Budgeting:</strong> Set up and track budgets on weekly, monthly, or annual intervals tailored to specific income streams or goals.</li>
+      <li><strong>Visual Spend vs. Remaining Gauge:</strong> Dynamic progress rings, charts, and color-coded threshold statuses (Safe Green, Warning Amber, Over-budget Red) displaying spent amounts vs remaining balance in real time.</li>
+      <li><strong>Smart Receipt Scanning (OCR):</strong> Capture receipts via camera or gallery; automatically extracts merchant name, date, items, and totals for instant review and logging.</li>
+      <li><strong>Custom &amp; Default Categories:</strong> Organize spending into distinct categories with custom icons and color tags.</li>
+      <li><strong>Detailed Transaction Filtering:</strong> Comprehensive query engine supporting filtering by date range, transaction type (income vs. expense), category, and budget association.</li>
+      <li><strong>Secure Dual-Token Authentication:</strong> 15-minute JWT Access Tokens paired with 30-day Refresh Tokens stored via hardware-backed <code>expo-secure-store</code>, featuring transparent Axios interceptors for background token refresh.</li>
+    </ul>
+
+    <h2>3. Architecture &amp; Technology Stack</h2>
+    <p>
+      MoneyMap implements a decoupled <strong>Client-Server Layered Architecture</strong> with containerized persistence:
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Layer</th>
+          <th>Technology</th>
+          <th>Role &amp; Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Mobile Client</strong></td>
+          <td>React Native (Expo SDK 54), TypeScript 5.9</td>
+          <td>Cross-platform native iOS &amp; Android app using Expo Router v6 file-based navigation.</td>
+        </tr>
+        <tr>
+          <td><strong>Client State</strong></td>
+          <td>Zustand v5 &amp; TanStack React Query v5</td>
+          <td>Zustand state machine for Auth &amp; Settings; React Query for caching and optimistic UI updates.</td>
+        </tr>
+        <tr>
+          <td><strong>Styling</strong></td>
+          <td>NativeWind (Tailwind CSS v4)</td>
+          <td>Clean, responsive design system based on a modern Soft Violet palette.</td>
+        </tr>
+        <tr>
+          <td><strong>Backend API</strong></td>
+          <td>Node.js, Express, RESTful APIs</td>
+          <td>Handles authentication, business logic, analytics calculations, and OCR processing.</td>
+        </tr>
+        <tr>
+          <td><strong>ORM &amp; Modeling</strong></td>
+          <td>Prisma ORM</td>
+          <td>Type-safe query building, relational schema modeling, and migration automation.</td>
+        </tr>
+        <tr>
+          <td><strong>Database</strong></td>
+          <td>PostgreSQL</td>
+          <td>ACID-compliant relational database ensuring financial data integrity.</td>
+        </tr>
+        <tr>
+          <td><strong>Containerization</strong></td>
+          <td>Docker &amp; Docker Compose</td>
+          <td>Containerized PostgreSQL environment ensuring zero-friction local and cloud deployments.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>4. Software Engineering Principles Applied</h2>
+    <ul>
+      <li><strong>SOLID Principles:</strong>
+        <ul>
+          <li><em>Single Responsibility Principle (SRP):</em> Separation between UI presentation, React Query hooks, and business domain layers.</li>
+          <li><em>Open/Closed Principle (OCP):</em> Extendable category systems and period calculators without changing core ledger engines.</li>
+          <li><em>Dependency Inversion Principle (DIP):</em> Modules depend on abstract hook interfaces rather than raw HTTP clients.</li>
+        </ul>
+      </li>
+      <li><strong>Separation of Concerns (SoC):</strong> Strict isolation between presentation logic, application state, and backend database queries.</li>
+      <li><strong>Resilient Network &amp; Concurrency Guard:</strong> Implemented Axios queue interceptors that hold concurrent 401 requests during token rotation to avoid race conditions.</li>
+      <li><strong>Infrastructure as Code &amp; Isolation:</strong> Dockerized database stack guarantees reproducible environments across machines.</li>
+      <li><strong>Defense in Depth:</strong> Hardware-backed keychain storage, bcrypt hashing, and parameterized ORM queries to prevent injection vulnerabilities.</li>
+    </ul>
+
+  </div>
+
+</div>
+
+<script>
+  function copyDocument() {
+    const docElement = document.getElementById('docContent');
+    const htmlContent = docElement.innerHTML;
+    const textContent = docElement.innerText;
+
+    const blobHtml = new Blob([htmlContent], { type: 'text/html' });
+    const blobText = new Blob([textContent], { type: 'text/plain' });
+
+    const clipboardItem = new ClipboardItem({
+      'text/html': blobHtml,
+      'text/plain': blobText
+    });
+
+    navigator.clipboard.write([clipboardItem]).then(() => {
+      const copyBtn = document.getElementById('copyBtn');
+      const copyText = document.getElementById('copyText');
+      const copyIcon = document.getElementById('copyIcon');
+      
+      copyText.innerText = 'Copied to Clipboard!';
+      copyIcon.innerText = '✅';
+      copyBtn.style.background = '#10B981';
+
+      setTimeout(() => {
+        copyText.innerText = 'Copy for Google Docs';
+        copyIcon.innerText = '📋';
+        copyBtn.style.background = '#7C6FF7';
+      }, 3000);
+    }).catch(err => {
+      alert('Selection copied to clipboard fallback. You can press Ctrl+C now.');
+      const range = document.createRange();
+      range.selectNode(docElement);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+      document.execCommand('copy');
+    });
+  }
+</script>
+
+</body>
+</html>
