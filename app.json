@@ -1,0 +1,72 @@
+{
+  "expo": {
+    "name": "MoneyMap",
+    "slug": "moneymap",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/images/icon.png",
+    "splash": {
+      "image": "./src/assets/images/splash-transparent.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0b0b0c"
+    },
+    "scheme": "moneymap",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sush9391.moneymap",
+      "infoPlist": {
+        "NSCameraUsageDescription": "We use your camera to scan receipts and extract transaction details.",
+        "NSPhotoLibraryUsageDescription": "We use your photo library so you can upload receipt images for processing.",
+        "NSPhotoLibraryAddUsageDescription": "We may save processed receipt previews to your photo library when you choose to export them."
+      }
+    },
+    "android": {
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_EXTERNAL_STORAGE"
+      ],
+      "adaptiveIcon": {
+        "backgroundColor": "#0b0b0c",
+        "foregroundImage": "./src/assets/images/android-icon-foreground.png",
+        "backgroundImage": "./src/assets/images/android-icon-background.png",
+        "monochromeImage": "./src/assets/images/android-icon-monochrome.png"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "package": "com.sush9391.moneymap"
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./src/assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow access to your photos so you can choose receipt images.",
+          "cameraPermission": "Allow camera access so you can scan receipts."
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./src/assets/images/splash-transparent.png",
+          "imageWidth": 1,
+          "resizeMode": "contain",
+          "backgroundColor": "#0b0b0c",
+          "dark": {
+            "backgroundColor": "#000000"
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}
