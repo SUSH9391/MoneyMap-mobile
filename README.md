@@ -117,15 +117,29 @@ Confirm response: `{ receiptId: string, transactionsCreated: number }`
 
 | Category | Technology | Version |
 |----------|-----------|---------|
-| Framework | Expo | 54 |
-| UI | React Native | 0.81 |
-| Language | TypeScript | 5.9 |
-| Navigation | Expo Router | 6 |
-| State | Zustand | 5 |
-| Server Cache | React Query | 5 |
-| HTTP | Axios | 1.13 |
-| Secure Storage | expo-secure-store | 15 |
-| Styling | NativeWind (Tailwind) | 4 |
-| Forms | React Hook Form + Zod | — |
-| Charts | react-native-gifted-charts | — |
-| Image Picker | expo-image-picker | 17 |
+| Framework | Expo | 58.x |
+| UI | React Native | 0.88.1 |
+| Language | TypeScript | 6.0.x |
+| Navigation | Expo Router | 58.0.x |
+| Navigation | React Navigation | 7.x |
+| State Management | Zustand | 5.0.x |
+| Server Cache | TanStack React Query | 5.90.x |
+| HTTP Client | Axios | 1.13.x |
+| Secure Storage | expo-secure-store | Expo SDK 58 compatible |
+| Local Storage | AsyncStorage | 2.2.x |
+| Styling | NativeWind (Tailwind CSS) | 4.2.x |
+| Forms | React Hook Form | 7.71.x |
+| Validation | Zod | 4.3.x |
+| Form Integration | @hookform/resolvers | 5.2.x |
+| Charts | react-native-gifted-charts | 1.4.x |
+| Image Picker | expo-image-picker | Expo SDK 58 compatible |
+| Image Rendering | expo-image | Expo SDK 58 compatible |
+| Animations | react-native-reanimated | 4.7.x |
+| Gestures | react-native-gesture-handler | 3.3.x |
+| SVG | react-native-svg | 15.16.x |
+| Calendar | react-native-calendars | 1.1314.x |
+| Date Utilities | Day.js | 1.11.x |
+| Haptics | expo-haptics | Expo SDK 58 compatible |
+| Icons | @expo/vector-icons | 15.0.x |
+| Fonts | expo-font | Expo SDK 58 compatible |
+| Development | ESLint | 9.25.x |
