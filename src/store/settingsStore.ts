@@ -1,6 +1,6 @@
+import * as SecureStore from 'expo-secure-store';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import * as SecureStore from 'expo-secure-store';
 
 export interface CurrencyOption {
     code: string;
@@ -9,12 +9,10 @@ export interface CurrencyOption {
 }
 
 export const CURRENCIES: CurrencyOption[] = [
-    { code: 'MYR', symbol: 'RM', label: 'Malaysian Ringgit' },
+    { code: 'INR', symbol: '₹', label: 'Indian Rupee' },
     { code: 'USD', symbol: '$', label: 'US Dollar' },
     { code: 'EUR', symbol: '€', label: 'Euro' },
     { code: 'GBP', symbol: '£', label: 'British Pound' },
-    { code: 'SGD', symbol: 'S$', label: 'Singapore Dollar' },
-    { code: 'IDR', symbol: 'Rp', label: 'Indonesian Rupiah' },
     { code: 'JPY', symbol: '¥', label: 'Japanese Yen' },
 ];
 
@@ -39,7 +37,7 @@ const secureStoreStorage = {
 export const useSettingsStore = create<SettingsState>()(
     persist(
         (set) => ({
-            currency: CURRENCIES[0], // default RM
+            currency: CURRENCIES[0], // defaults to INR (₹)
             setCurrency: (currency) => set({ currency }),
         }),
         {

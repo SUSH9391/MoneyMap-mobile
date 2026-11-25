@@ -1,9 +1,3 @@
-import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import {
     FLOATING_TAB_DOCK_HEIGHT,
@@ -12,13 +6,20 @@ import {
 } from '@/constants/layout';
 import { Colors, zinc } from '@/constants/theme';
 import { TourTarget } from '@/context/TourContext';
+import { useColorScheme } from '@/hooks/use-color-scheme';
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { useRouter } from 'expo-router';
+import React from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const TAB_HEIGHT = FLOATING_TAB_DOCK_HEIGHT;
 const CENTER_BUTTON_SIZE = FLOATING_TAB_FAB_SIZE;
 const FAB_SPACE = 64;
 const HORIZONTAL_MARGIN = 16;
 
-export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+export function TabBar(props: BottomTabBarProps) {
+    const { state, descriptors, navigation } = props;
     const insets = useSafeAreaInsets();
     const router = useRouter();
     const colorScheme = useColorScheme();
@@ -34,7 +35,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
     const bottomOffset = getFloatingTabBottomOffset(insets.bottom);
 
     const routes = state.routes.filter(
-        (route) => descriptors[route.key].options.tabBarIcon !== undefined,
+        (route) => descriptors[route.key]?.options?.tabBarIcon !== undefined,
     );
 
     return (
@@ -54,14 +55,32 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
                         const isFocused = state.index === index;
 
                         const onPress = () => {
-                            const event = navigation.emit({
-                                type: 'tabPress',
-                                target: route.key,
-                                canPreventDefault: true,
-                            });
+                            let defaultPrevented = false;
 
-                            if (!isFocused && !event.defaultPrevented) {
-                                navigation.navigate(route.name);
+                            if (navigation?.emit) {
+                                const event = navigation.emit({
+                                    type: 'tabPress',
+                                    target: route.key,
+                                    canPreventDefault: true,
+                                });
+                                defaultPrevented = event?.defaultPrevented;
+                            } else if ((props as any).emitter?.emit) {
+                                const event = (props as any).emitter.emit({
+                                    type: 'tabPress',
+                                    target: route.key,
+                                    canPreventDefault: true,
+                                });
+                                defaultPrevented = event?.defaultPrevented;
+                            }
+
+                            if (!isFocused && !defaultPrevented) {
+                                if ((props as any).navigateToTab) {
+                                    (props as any).navigateToTab(route.key);
+                                } else if (navigation?.navigate) {
+                                    navigation.navigate(route.name);
+                                } else {
+                                    router.push(route.name as any);
+                                }
                             }
                         };
 
@@ -89,6 +108,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
                 </View>
             </View>
 
+            {/* Center + Action Button */}
             <View
                 style={[
                     styles.fabContainer,
@@ -101,15 +121,11 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
                     <TouchableOpacity
                         style={[styles.fab, { backgroundColor: fabBackground }]}
                         hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                        accessibilityLabel="Add Transaction"
                         onPress={() => {
-                            const parentNavigation = navigation.getParent();
-                            if (parentNavigation) {
-                                parentNavigation.navigate('scan' as never);
-                                return;
-                            }
-                            router.push('/scan');
+                            router.push('/add-transaction');
                         }}>
-                        <IconSymbol name="viewfinder" size={28} color={fabIconColor} />
+                        <IconSymbol name="plus" size={28} color={fabIconColor} />
                     </TouchableOpacity>
                 </TourTarget>
             </View>
@@ -119,7 +135,11 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
 
 const styles = StyleSheet.create({
     wrapper: {
-        ...StyleSheet.absoluteFillObject,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
     },
     dock: {
         position: 'absolute',

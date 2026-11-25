@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { usersApi, PublicUser, UpdateProfileRequest } from '../api/endpoints/users';
+import { UpdateProfileRequest, usersApi } from '../api/endpoints/users';
 
 // ── Queries ────────────────────────────────────────────────────────────────
 
@@ -24,9 +24,10 @@ export const useFollowing = () => {
     return useQuery({
         queryKey: ['users', 'following'],
         queryFn: usersApi.getFollowing,
+        enabled: false, // Set to true once backend route /api/users/me/following is created
+        retry: false,
     });
 };
-
 export const useMutualFollows = () => {
     return useQuery({
         queryKey: ['users', 'mutual'],
@@ -38,6 +39,8 @@ export const useFollowers = () => {
     return useQuery({
         queryKey: ['users', 'followers'],
         queryFn: usersApi.getFollowers,
+        enabled: false, // Set to true once backend route /api/users/me/followers is created
+        retry: false,
     });
 };
 

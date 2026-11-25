@@ -23,7 +23,14 @@ export interface TransactionBudget {
   createdAt: string;
   updatedAt: string;
 }
-
+export interface CreateTransactionRequest {
+  categoryId: string;
+  budgetId?: string | null;
+  type: 'expense' | 'income';
+  amount: number;
+  description?: string;
+  date?: string;
+}
 export interface TransactionReceipt {
   id: string;
   userId: string;
@@ -77,6 +84,10 @@ export interface TransactionFilters {
 export const transactionApi = {
   getTransactions: async (filters: TransactionFilters = {}): Promise<Transaction[]> => {
     const response = await client.get<ApiResponse<Transaction[]>>('/transactions', { params: filters });
+    return response.data.data;
+  },
+  createTransaction: async (data: CreateTransactionRequest): Promise<Transaction> => {
+    const response = await client.post<ApiResponse<Transaction>>('/transactions', data);
     return response.data.data;
   },
 };

@@ -5,14 +5,8 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/images/icon.png",
-    "splash": {
-      "image": "./src/assets/images/splash-transparent.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#0b0b0c"
-    },
     "scheme": "moneymap",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.sush9391.moneymap",
@@ -34,7 +28,6 @@
         "backgroundImage": "./src/assets/images/android-icon-background.png",
         "monochromeImage": "./src/assets/images/android-icon-monochrome.png"
       },
-      "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "package": "com.sush9391.moneymap"
     },
@@ -55,7 +48,7 @@
         "expo-splash-screen",
         {
           "image": "./src/assets/images/splash-transparent.png",
-          "imageWidth": 1,
+          "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#0b0b0c",
           "dark": {
