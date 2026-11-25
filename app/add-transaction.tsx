@@ -205,9 +205,20 @@ export default function AddTransactionScreen() {
 
                 {/* Category Selection */}
                 <View className="mb-6">
-                    <ThemedText className="text-xs text-zinc-400 uppercase tracking-widest mb-3">
-                        Category
-                    </ThemedText>
+                    <View className="flex-row items-center justify-between mb-3">
+                        <ThemedText className="text-xs text-zinc-400 uppercase tracking-widest">
+                            Category
+                        </ThemedText>
+                        <TouchableOpacity
+                            onPress={() => router.push({ pathname: '/create-category', params: { type } })}
+                            className="flex-row items-center gap-1"
+                        >
+                            <IconSymbol name="plus" size={14} color={brand[500]} />
+                            <ThemedText className="text-xs font-semibold" style={{ color: brand[500] }}>
+                                New Category
+                            </ThemedText>
+                        </TouchableOpacity>
+                    </View>
                     {categoriesLoading ? (
                         <ActivityIndicator size="small" />
                     ) : filteredCategories.length === 0 ? (

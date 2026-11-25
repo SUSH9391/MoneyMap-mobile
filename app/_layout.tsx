@@ -17,7 +17,15 @@ export const unstable_settings = {
   initialRouteName: 'index',
 };
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // Data stays fresh for 5 minutes
+      gcTime: 1000 * 60 * 30, // Retain in cache for 30 minutes
+      refetchOnWindowFocus: false, // Don't refetch on app focus if data is fresh
+    },
+  },
+});
 
 function ThemeSync() {
   const preference = useThemeStore((s) => s.preference);
@@ -50,8 +58,6 @@ export default function RootLayout() {
             <Stack.Screen name="scan" options={{ presentation: 'modal', headerShown: false }} />
             <Stack.Screen name="receipt-review" options={{ presentation: 'modal', headerShown: false }} />
             <Stack.Screen name="profile" options={{ presentation: 'modal', headerShown: false }} />
-            <Stack.Screen name="find-people" options={{ presentation: 'modal', headerShown: false }} />
-            <Stack.Screen name="shared-inbox" options={{ presentation: 'modal', headerShown: false }} />
             <Stack.Screen name="add-transaction" options={{ presentation: 'modal', headerShown: false }} />
           </Stack>
           <StatusBar style="auto" />

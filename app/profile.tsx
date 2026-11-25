@@ -11,7 +11,7 @@ import { ThemedText } from '@/components/ui/themed-text';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useAuthStore } from '@/store/authStore';
-import { useFollowers, useFollowing, useUpdateProfile, useUploadAvatar, useDeleteAvatar } from '@/hooks/useUsers';
+import { useUpdateProfile, useUploadAvatar, useDeleteAvatar } from '@/hooks/useUsers';
 import { Colors, zinc, brand, Typography } from '@/constants/theme';
 import { useState } from 'react';
 
@@ -33,8 +33,6 @@ export default function ProfileScreen() {
   const cs = colorScheme ?? 'light';
 
   const user = useAuthStore((s) => s.user);
-  const { data: followers = [], isLoading: followersLoading } = useFollowers();
-  const { data: following = [], isLoading: followingLoading } = useFollowing();
   const updateProfile = useUpdateProfile();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -103,7 +101,6 @@ export default function ProfileScreen() {
     [user?.firstName, user?.lastName].filter(Boolean).join(' ') ||
     'Budget User';
   const initials = displayName.slice(0, 2).toUpperCase();
-  const statsLoading = followersLoading || followingLoading;
 
   const { control, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
@@ -282,89 +279,6 @@ export default function ProfileScreen() {
               ) : null}
             </>
           )}
-        </View>
-
-        {/* ── Follower / Following stats ────────────────────────── */}
-        <View className="flex-row gap-3 mb-4">
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => router.push({ pathname: '/settings/followers', params: { tab: 'followers' } })}
-            style={{ ...card, flex: 1, alignItems: 'center', paddingVertical: 16 }}
-          >
-            {statsLoading ? (
-              <ActivityIndicator size="small" />
-            ) : (
-              <>
-                <ThemedText className="text-2xl font-bold">{followers.length}</ThemedText>
-                <ThemedText className="text-xs text-zinc-500 mt-0.5">Followers</ThemedText>
-              </>
-            )}
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => router.push({ pathname: '/settings/followers', params: { tab: 'following' } })}
-            style={{ ...card, flex: 1, alignItems: 'center', paddingVertical: 16 }}
-          >
-            {statsLoading ? (
-              <ActivityIndicator size="small" />
-            ) : (
-              <>
-                <ThemedText className="text-2xl font-bold">{following.length}</ThemedText>
-                <ThemedText className="text-xs text-zinc-500 mt-0.5">Following</ThemedText>
-              </>
-            )}
-          </TouchableOpacity>
-        </View>
-
-        {/* ── Social actions ────────────────────────────────────── */}
-        <View style={{ ...card, overflow: 'hidden' }}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => router.push('/find-people')}
-            style={{
-              flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-              paddingHorizontal: 16, paddingVertical: 14,
-              borderBottomWidth: 1, borderBottomColor: isDark ? zinc[700] : zinc[200],
-            }}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-              <IconSymbol name="person.badge.plus" size={18} color={isDark ? zinc[400] : zinc[500]} />
-              <ThemedText className="text-sm font-medium">Find People</ThemedText>
-            </View>
-            <IconSymbol name="chevron.right" size={15} color={isDark ? zinc[600] : zinc[400]} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => router.push('/settings/followers')}
-            style={{
-              flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-              paddingHorizontal: 16, paddingVertical: 14,
-              borderBottomWidth: 1, borderBottomColor: isDark ? zinc[700] : zinc[200],
-            }}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-              <IconSymbol name="person.2.fill" size={18} color={isDark ? zinc[400] : zinc[500]} />
-              <ThemedText className="text-sm font-medium">Connections</ThemedText>
-            </View>
-            <IconSymbol name="chevron.right" size={15} color={isDark ? zinc[600] : zinc[400]} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => router.push('/shared-inbox')}
-            style={{
-              flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-              paddingHorizontal: 16, paddingVertical: 14,
-            }}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-              <IconSymbol name="tray.fill" size={18} color={isDark ? zinc[400] : zinc[500]} />
-              <ThemedText className="text-sm font-medium">Shared Items</ThemedText>
-            </View>
-            <IconSymbol name="chevron.right" size={15} color={isDark ? zinc[600] : zinc[400]} />
-          </TouchableOpacity>
         </View>
 
       </View>

@@ -8,7 +8,7 @@ import { useCategories, useDeleteCategory } from '@/hooks/useCategories';
 import { useTransactions } from '@/hooks/useTransactions';
 import { useAppCurrency } from '@/hooks/useAppCurrency';
 import { Category } from '@/api/endpoints/categories';
-import { useRouter, useFocusEffect } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { getFloatingTabContentPaddingBottom } from '@/constants/layout';
 import { useMemo, useCallback } from 'react';
 import { useColorScheme } from '@/hooks/use-color-scheme';
@@ -22,14 +22,9 @@ export default function CategoriesScreen() {
     const router = useRouter();
     const { format } = useAppCurrency();
 
-    const { data: categories = [], isLoading, error, refetch: refetchCats } = useCategories();
-    const { data: transactions = [], refetch: refetchTxs } = useTransactions();
+    const { data: categories = [], isLoading, error } = useCategories();
+    const { data: transactions = [] } = useTransactions();
     const deleteCategoryMutation = useDeleteCategory();
-
-    useFocusEffect(useCallback(() => {
-        refetchCats();
-        refetchTxs();
-    }, [refetchCats, refetchTxs]));
 
     const statsById = useMemo(() => {
         const map: Record<string, CategoryStats> = {};

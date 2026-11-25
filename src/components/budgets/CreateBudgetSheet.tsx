@@ -1,22 +1,23 @@
+import { Category } from "@/api/endpoints/categories";
+import { IconSymbol } from "@/components/ui/icon-symbol";
+import { ThemedText } from "@/components/ui/themed-text";
+import { brand, Colors, Typography, zinc } from "@/constants/theme";
+import { useColorScheme } from "@/hooks/use-color-scheme";
+import { useAppCurrency } from "@/hooks/useAppCurrency";
+import { useCreateBudget } from "@/hooks/useBudgets";
+import { useCategories } from "@/hooks/useCategories";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
-  View,
-  Modal,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
   ActivityIndicator,
   Alert,
+  Modal,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ThemedText } from "@/components/ui/themed-text";
-import { IconSymbol } from "@/components/ui/icon-symbol";
-import { useColorScheme } from "@/hooks/use-color-scheme";
-import { useCategories } from "@/hooks/useCategories";
-import { useCreateBudget } from "@/hooks/useBudgets";
-import { useAppCurrency } from "@/hooks/useAppCurrency";
-import { Colors, Typography, zinc } from "@/constants/theme";
-import { Category } from "@/api/endpoints/categories";
 
 interface Props {
   visible: boolean;
@@ -33,6 +34,7 @@ const PERIODS = [
 const FALLBACK_COLOR = zinc[500];
 
 export function CreateBudgetSheet({ visible, onClose }: Props) {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
@@ -41,17 +43,21 @@ export function CreateBudgetSheet({ visible, onClose }: Props) {
   const { data: categories = [] } = useCategories();
   const createBudget = useCreateBudget();
 
+  // Safely match expense categories regardless of backend casing
   const expenseCategories = categories.filter(
-    (c: Category) => c.type === "expense",
+    (cat: Category) => (cat.type || (cat as any).Type)?.toLowerCase() === "expense"
   );
+  const selectableCategories = expenseCategories.length > 0 ? expenseCategories : categories;
+
   const { symbol } = useAppCurrency();
+  const currencySymbol = symbol || "₹";
 
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
-  const [period, setPeriod] = useState<
-    "daily" | "weekly" | "monthly" | "yearly"
-  >("monthly");
+  const [period, setPeriod] = useState<"daily" | "weekly" | "monthly" | "yearly">("monthly");
   const [categoryId, setCategoryId] = useState("");
+
+  const selectedCategory = selectableCategories.find((cat) => cat.id === categoryId);
 
   const reset = () => {
     setName("");
@@ -76,7 +82,7 @@ export function CreateBudgetSheet({ visible, onClose }: Props) {
       return;
     }
     if (!categoryId) {
-      Alert.alert("Category required", "Please select a category.");
+      Alert.alert("Category required", "Please select a category for this budget.");
       return;
     }
 
@@ -186,7 +192,7 @@ export function CreateBudgetSheet({ visible, onClose }: Props) {
             <TextInput
               value={amount}
               onChangeText={setAmount}
-              placeholder={`${symbol} 0.00`}
+              placeholder={`${currencySymbol} 0.00`}
               placeholderTextColor={c.textMuted}
               keyboardType="decimal-pad"
               style={inputStyle}
@@ -222,40 +228,112 @@ export function CreateBudgetSheet({ visible, onClose }: Props) {
               })}
             </View>
 
-            {/* Category */}
-            <ThemedText className="text-xs tracking-widest text-zinc-500 mb-2 mt-5">
-              CATEGORY
-            </ThemedText>
-            <View className="flex-row flex-wrap gap-2 mb-8">
-              {expenseCategories.map((cat: Category) => {
-                const selected = categoryId === cat.id;
-                const color = cat.color ?? FALLBACK_COLOR;
-                return (
-                  <TouchableOpacity
-                    key={cat.id}
-                    onPress={() => setCategoryId(cat.id)}
-                    className="flex-row items-center gap-2 px-3 py-2 rounded-full border"
-                    style={{
-                      backgroundColor: selected ? c.primaryLight : "transparent",
-                      borderColor: selected ? c.primary : c.border,
-                    }}
-                  >
-                    <View
-                      className="w-2 h-2 rounded-full"
-                      style={{ backgroundColor: color }}
-                    />
-                    <ThemedText
-                      className="text-sm"
+            {/* Category Section */}
+            <View className="flex-row items-center justify-between mt-5 mb-2">
+              <ThemedText className="text-xs tracking-widest text-zinc-500">
+                CATEGORY
+              </ThemedText>
+              <View className="flex-row items-center gap-3">
+                {selectedCategory ? (
+                  <ThemedText className="text-xs font-semibold" style={{ color: brand[500] }}>
+                    Selected: {selectedCategory.name}
+                  </ThemedText>
+                ) : (
+                  <ThemedText className="text-xs text-rose-500">
+                    * Select a category
+                  </ThemedText>
+                )}
+                <TouchableOpacity
+                  onPress={() => {
+                    handleClose();
+                    router.push("/create-category");
+                  }}
+                  className="flex-row items-center gap-1"
+                >
+                  <IconSymbol name="plus" size={13} color={brand[500]} />
+                  <ThemedText className="text-xs font-semibold" style={{ color: brand[500] }}>
+                    New Category
+                  </ThemedText>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {selectableCategories.length === 0 ? (
+              <View
+                style={{
+                  padding: 16,
+                  borderRadius: 16,
+                  borderWidth: 1,
+                  borderStyle: "dashed",
+                  borderColor: isDark ? zinc[700] : zinc[300],
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginBottom: 24,
+                }}
+              >
+                <ThemedText className="text-sm text-zinc-500 mb-3">
+                  No categories found.
+                </ThemedText>
+                <TouchableOpacity
+                  onPress={() => {
+                    handleClose();
+                    router.push("/create-category");
+                  }}
+                  style={{
+                    paddingHorizontal: 16,
+                    paddingVertical: 8,
+                    borderRadius: 12,
+                    backgroundColor: isDark ? zinc[800] : zinc[200],
+                  }}
+                >
+                  <ThemedText className="text-sm font-semibold">
+                    + Create Category
+                  </ThemedText>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View className="flex-row flex-wrap gap-2 mb-8">
+                {selectableCategories.map((cat: Category) => {
+                  const selected = categoryId === cat.id;
+                  const color = cat.color ?? FALLBACK_COLOR;
+                  return (
+                    <TouchableOpacity
+                      key={cat.id}
+                      onPress={() => setCategoryId(cat.id)}
+                      className="flex-row items-center gap-2 px-3.5 py-2.5 rounded-2xl border"
                       style={{
-                        color: selected ? c.primary : c.text,
+                        backgroundColor: selected
+                          ? isDark ? zinc[800] : zinc[100]
+                          : "transparent",
+                        borderColor: selected ? brand[500] : c.border,
+                        borderWidth: selected ? 2 : 1,
                       }}
                     >
-                      {cat.name}
-                    </ThemedText>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
+                      <View
+                        style={{
+                          width: 10,
+                          height: 10,
+                          borderRadius: 5,
+                          backgroundColor: color,
+                        }}
+                      />
+                      <ThemedText
+                        className="text-sm"
+                        style={{
+                          fontWeight: selected ? "700" : "500",
+                          color: selected ? c.text : c.textSecondary,
+                        }}
+                      >
+                        {cat.name}
+                      </ThemedText>
+                      {selected && (
+                        <IconSymbol name="checkmark" size={13} color={brand[500]} />
+                      )}
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            )}
           </ScrollView>
 
           {/* Create button */}

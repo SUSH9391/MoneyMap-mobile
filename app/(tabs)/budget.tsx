@@ -8,7 +8,7 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useBudgets } from '@/hooks/useBudgets';
 import { useAppCurrency } from '@/hooks/useAppCurrency';
 import { useMemo, useCallback, useState, useEffect } from 'react';
-import { useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { getFloatingTabContentPaddingBottom } from '@/constants/layout';
 import { CreateBudgetSheet } from '@/components/budgets/CreateBudgetSheet';
 import { Colors, zinc, brand } from '@/constants/theme';
@@ -34,7 +34,7 @@ export default function BudgetScreen() {
     const cs          = colorScheme ?? 'light';
 
     const { autoCreate } = useLocalSearchParams<{ autoCreate?: string }>();
-    const { data: budgets = [], isLoading, refetch } = useBudgets();
+    const { data: budgets = [], isLoading } = useBudgets();
     const [sheetVisible, setSheetVisible] = useState(false);
 
     // Auto-open the create sheet when arriving from the first-budget onboarding prompt
@@ -43,8 +43,6 @@ export default function BudgetScreen() {
     }, [autoCreate]);
     const contentPaddingBottom = getFloatingTabContentPaddingBottom(insets.bottom);
     const { format } = useAppCurrency();
-
-    useFocusEffect(useCallback(() => { refetch(); }, [refetch]));
 
     const activeBudgets = useMemo(() => budgets.filter((b) => b.isActive), [budgets]);
 

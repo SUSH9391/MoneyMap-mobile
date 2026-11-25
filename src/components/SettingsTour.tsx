@@ -16,13 +16,7 @@ const STEPS = [
         targetId: 'settings-profile',
         icon: 'person.crop.circle.fill' as const,
         title: 'Your profile',
-        description: 'Tap to update your display name and photo. They show up in search results and receipt sharing.',
-    },
-    {
-        targetId: 'settings-social',
-        icon: 'person.2.fill' as const,
-        title: 'Connect with others',
-        description: 'Find friends, manage your connections, and check items people have shared with you.',
+        description: 'Tap to update your display name and photo.',
     },
     {
         targetId: 'settings-preferences',

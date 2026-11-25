@@ -162,30 +162,6 @@ export default function SettingsScreen() {
           </TourTarget>
         </View>
 
-        {/* Social */}
-        <View className="px-4 pb-3">
-          <ThemedText className="text-xs tracking-widest text-zinc-400 mb-2 px-1">SOCIAL</ThemedText>
-          <TourTarget id="settings-social">
-          <View className="rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 overflow-hidden">
-            <SettingsRow
-              icon="person.2.fill"
-              label="Find People"
-              onPress={() => router.push('/find-people')}
-            />
-            <SettingsRow
-              icon="person.badge.plus"
-              label="Connections"
-              onPress={() => router.push('/settings/followers')}
-            />
-            <SettingsRow
-              icon="tray.fill"
-              label="Shared Items"
-              onPress={() => router.push('/shared-inbox')}
-              isLast
-            />
-          </View>
-          </TourTarget>
-        </View>
 
         {/* Preferences */}
         <View className="px-4 pb-3">

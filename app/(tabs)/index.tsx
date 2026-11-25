@@ -1,6 +1,6 @@
 import { View, ScrollView, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
 import { Image } from 'expo-image';
-import { Link, useRouter, useFocusEffect } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { ThemedText } from '@/components/ui/themed-text';
 import { ThemedView } from '@/components/ui/themed-view';
 import { BarChart } from 'react-native-gifted-charts';
@@ -61,16 +61,11 @@ export default function DashboardScreen() {
   const initials = ((user as any)?.displayName || [user?.firstName, user?.lastName].filter(Boolean).join(' ') || '?').slice(0, 2).toUpperCase();
 
   // ── Data ──────────────────────────────────────────────────────────────────
-  const { data: monthTxs = [], isLoading: txLoading, refetch: refetchTx } = useTransactions({
+  const { data: monthTxs = [], isLoading: txLoading } = useTransactions({
     startDate: monthStart,
     endDate:   monthEnd,
   });
-  const { data: budgets = [], isLoading: budgetLoading, refetch: refetchBudgets } = useBudgets();
-
-  useFocusEffect(useCallback(() => {
-    refetchTx();
-    refetchBudgets();
-  }, [refetchTx, refetchBudgets]));
+  const { data: budgets = [], isLoading: budgetLoading } = useBudgets();
 
   // ── Totals ────────────────────────────────────────────────────────────────
   const totalExpense = useMemo(
